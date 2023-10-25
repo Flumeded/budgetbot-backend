@@ -1,0 +1,10 @@
+[Interface]
+PrivateKey={{ wg_private_key_stdout.results | json_query('[?item == `' + 'server' + '`].stdout | [0]') }}
+Address={{ wireguard_setup_server_vpn_network }}
+PostUp=iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+PostDown=iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o {{ ansible_default_ipv4.interface }} -j MASQUERADE
+ListenPort={{ wireguard_setup_wireguard_port }}
+
+[Peer]
+PublicKey={{ wg_public_key_stdout.results | json_query('[?item == `' + 'client' + '`].stdout | [0]') }}
+AllowedIPs={{ wireguard_setup_server_allowed_ips }}

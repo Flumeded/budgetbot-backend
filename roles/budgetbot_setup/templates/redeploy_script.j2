@@ -1,0 +1,16 @@
+{{ "#" }}!/bin/bash
+
+# Pull the latest image
+docker pull {{ budgetbot_setup_container_registry_url }}/budgetbot:latest
+
+# Check if a container named "budgetbot" is running
+CONTAINER_ID=$(docker ps -q --filter "name=budgetbot")
+
+# If it is, stop and remove it
+if [ ! -z "$CONTAINER_ID" ]; then
+    docker stop $CONTAINER_ID
+    docker rm $CONTAINER_ID
+fi
+
+# Start a new container with the latest image
+docker run -d --name budgetbot --restart unless-stopped -v /home/github-action/user_data/:/app/user_data/ -e API_KEY={{ budgetbot_setup_bot_api_key }}  {{ budgetbot_setup_container_registry_url }}/budgetbot:latest

@@ -1,0 +1,9 @@
+[Interface]
+PrivateKey={{ wg_private_key_stdout.results | json_query('[?item == `' + 'client' + '`].stdout | [0]') }}
+Address={{ wireguard_setup_clinet_vpn_network }}
+DNS={{ wireguard_setup_client_dns_1 }}, {{ wireguard_setup_client_dns_2 }}
+
+[Peer]
+PublicKey={{ wg_public_key_stdout.results | json_query('[?item == `' + 'server' + '`].stdout | [0]') }}
+AllowedIPs={{ wireguard_setup_client_allowed_ips }}
+Endpoint={{ inventory_hostname }}:{{ wireguard_setup_wireguard_port }}

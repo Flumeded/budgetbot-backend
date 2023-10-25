@@ -1,0 +1,53 @@
+- name: Install wireguard
+  ansible.builtin.apt:
+    name: wireguard
+    state: present
+
+- name: Generate WireGuard private key
+  ansible.builtin.command:
+    cmd: "wg genkey"
+  loop:
+    - server
+    - client
+  register: "wg_private_key_stdout"
+  changed_when: true
+
+- name: Generate WireGuard public key
+  ansible.builtin.command:
+    cmd: "wg pubkey"
+# Extracting the stdout from the registred variable for both local and remote keys to generate a public key
+    stdin: "{{ wg_private_key_stdout.results | json_query('[?item == `' + item + '`].stdout | [0]') }}"
+  loop:
+    - server
+    - client
+  register: wg_public_key_stdout
+  changed_when: true
+
+- name: Template server WireGuard configuration
+  ansible.builtin.template:
+    src: server_conf.j2
+    dest: /etc/wireguard/wg0.conf
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Template local WireGuard configuration locally
+  ansible.builtin.template:
+    src: client_conf.j2
+    dest: "./wg0.conf"
+    mode: '0600'
+  delegate_to: localhost
+
+- name: Reload (and start if neccessary) and enable wireguard service
+  ansible.builtin.service:
+    name: wg-quick@wg0
+    state: restarted
+    enabled: true
+
+- name: Enable IPv4 forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: true
+    state: present
+    reload: true

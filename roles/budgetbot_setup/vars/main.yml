@@ -1,0 +1,7 @@
+#Container_Registry
+budgetbot_setup_container_registry_url:
+budgetbot_setup_container_registry_username:
+budgetbot_setup_container_registry_password:
+
+#Container Varaibles
+budgetbot_setup_bot_api_key:

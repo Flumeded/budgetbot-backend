@@ -1,0 +1,10 @@
+- name: Server config
+  hosts: server
+  remote_user: root
+  vars_files:
+    - vars/default.yml
+  roles:
+    - role: wireguard_setup
+    # - role: webhook
+    # - role: geerlingguy.docker
+    # - role: budgetbot_setup

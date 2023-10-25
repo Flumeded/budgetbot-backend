@@ -1,0 +1,32 @@
+- name: Log into private registry
+  community.docker.docker_login:
+    registry_url: "{{ budgetbot_setup_container_registry_url }}"
+    username: "{{ budgetbot_setup_container_registry_username }}"
+    password: "{{ budgetbot_setup_container_registry_password }}"
+
+- name: Ensure webhook directory exists
+  ansible.builtin.file:
+    path: /etc/webhook/
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Template redeployment script
+  ansible.builtin.template:
+    src: redeploy_script.j2
+    dest: /etc/webhook/redeploy.sh
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Deploy budgetbot container
+  community.docker.docker_container:
+    name: budgetbot
+    image: "{{ budgetbot_setup_container_registry_url }}/budgetbot:latest"
+    restart_policy: "unless-stopped"
+    env:
+      API_KEY: "{{ budgetbot_setup_bot_api_key }}"
+    volumes:
+      - "/home/github-action/user_data/:/app/user_data/"
+

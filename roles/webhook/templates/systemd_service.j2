@@ -1,0 +1,8 @@
+[Unit]
+Description=Webhooks
+
+[Service]
+ExecStart=webhook -hooks /etc/webhook/webhooks.yml -hotreload -port 80
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,45 @@
+- name: Install webhook
+  ansible.builtin.apt:
+    name: webhook
+    state: present
+
+- name: Template systemd configuration
+  ansible.builtin.template:
+    src: systemd_service.j2
+    dest: /etc/systemd/system/webhook.service
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Force systemd to re-execute itself
+  ansible.builtin.systemd:
+    daemon_reexec: true
+
+- name: Ensure webhook directory exists
+  ansible.builtin.file:
+    path: /etc/webhook/
+    state: directory
+    owner: root
+    group: root
+    mode: '0700'
+
+- name: Template webhook configuration
+  ansible.builtin.template:
+    src: webhook_config.j2
+    dest: /etc/webhook/webhooks.yml
+    owner: root
+    group: root
+    mode: '0600'
+
+- name: Allow all access to tcp port 80
+  community.general.ufw:
+    rule: allow
+    port: '80'
+    proto: tcp
+
+- name: Reload (and start if neccessary) and enable webhook service
+  ansible.builtin.service:
+    name: webhook
+    state: restarted
+    enabled: true
+
