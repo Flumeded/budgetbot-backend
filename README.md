@@ -2,32 +2,32 @@
 
 ## About
 
-This playbook is needed for deployment of a the infrastructure needed for production [telegram budgetbot](https://github.com/itsoneword/budgetbot) usage.  
+This playbook is essential for deploying the infrastructure required for the production use of [Telegram Budgetbot](https://github.com/itsoneword/budgetbot).
 
-## What does it do
+## What It Does
 
- * Deploys a Wireguard server and generates a client configuration.  
- (for bot's author personal usage)
+- **Deploys a Wireguard Server:** Sets up a Wireguard VPN server and generates a client configuration, intended for the bot's author's personal usage.
+- **Sets Up Webhook Server:** Deploys a [webhook server](https://github.com/adnanh/webhook) necessary for triggering redeployment on merges or commits to the repository.  
+The webhook is linked to a bash script that handles bot redeployment.
+- **Docker and Budgetbot Deployment:** Installs Docker and deploys the latest version of Budgetbot.
 
- * Deploys a [webhook](https://github.com/adnanh/webhook) server needed for triggering redeploy on merges/commits to the repository.  
- Webhook is connected to bash script which is responsible for bot redeployment.
+## How to Use
 
- * Sets up docker, and deploys a recent version of budgetbot
+1. **Populate the Inventory File:** 
+   - Add the IP address of your destination server to the `inventory.yml` file. 
+   - Ensure the server is configured to accept SSH connections with a private key (without needing to specify the key via the `-i` parameter).
+   - For more details, refer to the [Ansible Connection Guide](https://docs.ansible.com/ansible/latest/inventory_guide/connection_details.html).
 
- ## How to use it
+   **Example:**
+   ```yaml
+   [server]
+   192.168.0.10
+2. **Configure Variables:**
+   - Populate the variables in the vars folder for each task.
+   - You can also use an encrypted vars file if you have the password (note: this is for internal use).
 
- 1) Create the `inventory` file containing an ip for a destination server.  
- (Make sure your server is configured to accept private to access a root account, and local ssh config file or SSH agent is set so when you connect to the server you don't need to specify this key using -i parameter). If you want to learn more, follow [Ansible docs](https://docs.ansible.com/ansible/latest/inventory_guide/connection_details.html).
-
- Example:
- ```
- [server]
-192.168.0.10
- ```
-2) Fill the variables in each task vars folder with your own.  
-Or you can get them from encrypted vars file you have a password (you probably don't).
-
-3) Start the playbook using
-```
-ansible-playbook server.yml -i inventory
-```
+3. **Execute the Playbook:**  
+   Run the following command to start the deployment:
+     ```bash
+     ansible-playbook server.yml -i inventory.yml
+     ```
