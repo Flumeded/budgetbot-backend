@@ -11,3 +11,4 @@ wireguard_setup_server_allowed_ips: "10.99.88.2/32"
 
 # Common
 wireguard_setup_wireguard_port: "51820"
+
