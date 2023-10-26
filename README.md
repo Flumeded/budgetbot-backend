@@ -26,7 +26,7 @@ The webhook is linked to a bash script that handles bot redeployment.
    - Populate the variables in the vars folder for each task.
    - You can also use an encrypted vars file if you have the password (note: this is for internal use).
 
-3. **Install Requirments**  
+3. **Install Requirements**  
     Install depended roles with:
     ```bash
     ansible-galaxy install -r requirements.yml
