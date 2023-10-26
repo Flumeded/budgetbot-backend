@@ -1,2 +1,4 @@
+# Webhook secret generated on Github side so it will only accept "signed" requests.
+# More about webhook secrets https://docs.github.com/en/webhooks/using-webhooks/validating-webhook-deliveries
 webhook_secret:
 

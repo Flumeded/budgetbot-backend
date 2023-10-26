@@ -1,4 +1,5 @@
 #Container_Registry
+# I'm using my own container registry, so credentials and ulr are needed.
 budgetbot_setup_container_registry_url:
 budgetbot_setup_container_registry_username:
 budgetbot_setup_container_registry_password:
