@@ -14,3 +14,5 @@ fi
 
 # Start a new container with the latest image
 docker run -d --name budgetbot --restart unless-stopped -v /home/github-action/user_data/:/app/user_data/ -e API_KEY={{ budgetbot_setup_bot_api_key }}  {{ budgetbot_setup_container_registry_url }}/budgetbot:latest
+# Remove old images
+docker image prune -a --force --filter "until=24h"
